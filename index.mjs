@@ -1,6 +1,8 @@
-const { ethers } = require("ethers");
-const config = require("./config")
-const readline = require('readline');
+import { ethers } from "ethers";
+import config from "./config.mjs";
+import { createInterface } from 'readline';
+// 使用chalk库来设置文本颜色
+import chalk from 'chalk';
 
 // 连接到结点
 const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
@@ -69,7 +71,7 @@ async function sendTransaction(nonce) {
   // 付费金额
   const payPrice = config.payPrice
 
-  console.log("正在打铭文数据的16进制数据", hexData)
+  console.log(chalk.green("正在打铭文数据的16进制数据", hexData))
 
   const transaction = {
     to: address,
@@ -96,14 +98,14 @@ async function sendTransaction(nonce) {
 // 查询钱包
 async function checkWalletBalance() {
   const balance = await wallet.getBalance();
-  console.log("钱包余额:", ethers.utils.formatEther(balance));
+  console.log(chalk.green("钱包余额:", ethers.utils.formatEther(balance)));
   return balance;
 }
 
 // 随机sleep时间
 async function sleep() {
   const ms = Math.floor((Math.random() + 0.3) * config.sleepTime);
-  console.log("等待:",ms);
+  console.log("等待:", ms);
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -118,14 +120,14 @@ async function sendTransactions() {
   }
 }
 
-const rl = readline.createInterface({
+const rl = createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
 const main = async () => {
-  console.log("功能选择...");
-  console.log("可用功能(输入数字): '1.检查钱包余额', '2.铭文铸造'");
+  console.log(chalk.red('===功能选择==='));
+  console.log(chalk.cyan('可用功能(输入数字): 1.检查钱包余额, 2.铭文铸造'));
 
   for await (const line of rl) {
     switch (line) {
